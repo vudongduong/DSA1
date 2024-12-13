@@ -184,4 +184,42 @@ public class StudentManagement {
             System.out.println("No student found with score: " + score);
         }
     }
+    public Student binarySearch(String studentId) {
+        if (studentStack.isEmpty()) {
+            throw new IllegalStateException("Cannot perform binary search. The stack is empty.");
+        }
+
+        Student[] students = new Student[studentStack.size()];
+        int count = 0;
+
+        while (!studentStack.isEmpty()) {
+            students[count++] = studentStack.pop();
+        }
+
+        Arrays.sort(students, (s1, s2) -> s1.getId().compareTo(s2.getId()));
+
+        int low = 0;
+        int high = students.length - 1;
+
+        while (low <= high) {
+            int mid = (low + high) / 2;
+            if (students[mid].getId().equals(studentId)) {
+                // Đưa lại sinh viên vào stack
+                for (int i = 0; i < students.length; i++) {
+                    studentStack.push(students[i]);
+                }
+                return students[mid];
+            } else if (students[mid].getId().compareTo(studentId) < 0) {
+                low = mid + 1;
+            } else {
+                high = mid - 1;
+            }
+        }
+
+        for (int i = 0; i < students.length; i++) {
+            studentStack.push(students[i]);
+        }
+
+        return null;
+    }
 }
